@@ -15,17 +15,18 @@ import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.*
 import com.kugemi.lime.presentataion.screen.ChannelsScreen
+import com.kugemi.lime.presentataion.viewmodels.ChannelsViewModel
 import kotlinx.coroutines.launch
 
 @ExperimentalPagerApi
 @Composable
-fun TabLayout() {
+fun TabLayout(channelsViewModel: ChannelsViewModel) {
 
     val pagerState = rememberPagerState(pageCount = 2)
 
     Column {
         Tabs(pagerState = pagerState)
-        TabsContent(pagerState = pagerState)
+        TabsContent(pagerState = pagerState, channelsViewModel)
     }
 }
 
@@ -70,12 +71,15 @@ fun Tabs(pagerState: PagerState) {
 
 @ExperimentalPagerApi
 @Composable
-fun TabsContent(pagerState: PagerState) {
-    HorizontalPager(state = pagerState) {
+fun TabsContent(pagerState: PagerState, channelsViewModel: ChannelsViewModel) {
+    HorizontalPager(
+        state = pagerState,
+        verticalAlignment = Alignment.Top
+    ) {
             page ->
         when (page) {
-            0 -> ChannelsScreen()
-            1 -> ChannelsScreen()
+            0 -> ChannelsScreen(channelsViewModel)
+            1 -> ChannelsScreen(channelsViewModel, true)
         }
     }
 }

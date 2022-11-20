@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChannelsViewModel @Inject constructor(
-    channelsUseCase: ChannelsUseCases
+    private val channelsUseCase: ChannelsUseCases
 ) : ViewModel() {
     private val myChannels = MutableLiveData<Channels>()
 

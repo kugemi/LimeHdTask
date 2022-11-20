@@ -30,7 +30,7 @@ import com.kugemi.lime.presentataion.viewmodels.ChannelsViewModel
 fun MainScreen() {
     val textState = remember { mutableStateOf(TextFieldValue("")) }
 
-    //val channelsViewModel: ChannelsViewModel = viewModel()
+    val channelsViewModel: ChannelsViewModel = viewModel()
 
     //val channels = channelsViewModel.channels.observeAsState()
 
@@ -45,7 +45,7 @@ fun MainScreen() {
             SearchComponent(textState)
         }
 
-        TabLayout()
+        TabLayout(channelsViewModel)
 
     }
 }

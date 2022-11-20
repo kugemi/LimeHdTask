@@ -14,25 +14,44 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kugemi.lime.domain.model.Channel
 import com.kugemi.lime.presentataion.components.ChannelItem
 import com.kugemi.lime.presentataion.viewmodels.ChannelsViewModel
+import com.kugemi.lime.presentataion.viewmodels.FavoritesViewModel
 
 @Composable
-fun ChannelsScreen() {
-    val channelsViewModel: ChannelsViewModel = viewModel()
+fun ChannelsScreen(channelsViewModel: ChannelsViewModel, isFavorites: Boolean = false) {
+
+    val favoritesViewModel: FavoritesViewModel = viewModel()
 
     val channels = channelsViewModel.channels.observeAsState()
 
+    val favoriteChannels = favoritesViewModel.favoriteChannels.observeAsState()
+
+    var channelsList = listOf<Channel>()
+
     channels.value?.let { channels ->
-        LazyColumn {
-            item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(16.dp)
-                )
+        channelsList = if (!isFavorites) {
+            channels.channels
+        } else {
+            channels.channels.filter { channel ->
+                var isContains = false
+                favoriteChannels.value?.forEach { favorite ->
+                    if (channel.name_ru == favorite.name) isContains = true
+                }
+                isContains
             }
-            items(channels.channels) { item ->
-                ChannelItem(channel = item)
-            }
+        }
+    }
+
+
+    LazyColumn {
+        item {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(16.dp)
+            )
+        }
+        items(channelsList) { item ->
+            ChannelItem(channel = item, favoritesViewModel)
         }
     }
 }
