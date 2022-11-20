@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">LimeHDTask</string>
+    <string name="channel_search_hint">Напишите название телеканала</string>
+</resources>
