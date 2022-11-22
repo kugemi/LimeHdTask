@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">LimeHDTask</string>
     <string name="channel_search_hint">Напишите название телеканала</string>
+    <string name="all">Все</string>
+    <string name="favorites">Избранные</string>
 </resources>

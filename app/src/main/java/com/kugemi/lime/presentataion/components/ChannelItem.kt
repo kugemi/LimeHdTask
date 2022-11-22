@@ -1,6 +1,7 @@
 package com.kugemi.lime.presentataion.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -11,47 +12,49 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.kugemi.lime.domain.model.Channel
 import com.kugemi.lime.domain.model.FavoriteChannel
+import com.kugemi.lime.presentataion.resources.*
+import com.kugemi.lime.presentataion.viewmodels.ChannelsViewModel
 import com.kugemi.lime.presentataion.viewmodels.FavoritesViewModel
 
 @Composable
 fun ChannelItem(
     channel: Channel,
-    favoritesViewModel: FavoritesViewModel
+    favoritesViewModel: FavoritesViewModel,
+    channelsViewModel: ChannelsViewModel
 ) {
     val favoriteChannels = favoritesViewModel.favoriteChannels.observeAsState()
 
     var isSelected by remember { mutableStateOf(false) }
 
     favoriteChannels.value?.let { favoriteChannels ->
-        favoriteChannels.forEach { favoriteChannel ->
-            if (channel.name_ru == favoriteChannel.name) isSelected = true
-        }
+        isSelected = (favoriteChannels.firstOrNull { channel.name_ru == it.name } != null)
     }
 
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 4.dp),
+            .padding(
+                horizontal = channelItemHorizontalPadding,
+                vertical = channelItemVerticalPadding
+            )
+            .clickable { channelsViewModel.setCurrentUrl(channel) },
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFF343438),
         ),
-        shape = RoundedCornerShape(10.dp)
+        shape = RoundedCornerShape(cardCornerShape)
     ) {
         Row(
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier.padding(channelItemHorizontalPadding)
         ) {
             Image(
                 painter = rememberAsyncImagePainter(channel.image),
                 contentDescription = null,
                 modifier = Modifier
-                    .size(60.dp)
-                    .padding(end = 16.dp)
+                    .size(channelImageSize)
+                    .padding(end = channelImageEndPadding)
                     .align(Alignment.CenterVertically)
                     .weight(0.2f)
             )
@@ -63,12 +66,12 @@ fun ChannelItem(
                 Text(
                     text = channel.name_ru,
                     color = Color.White,
-                    fontSize = 18.sp
+                    fontSize = channelNameTextSize
                 )
                 Text(
-                    text = channel.current.title,
-                    color = Color(0xFFE9EAEF),
-                    fontSize = 15.sp
+                    text = channel.current?.title ?: "",
+                    color = channelTitleTextColor,
+                    fontSize = channelTitleTextSize
                 )
             }
             Row(
@@ -79,7 +82,7 @@ fun ChannelItem(
                 horizontalArrangement = Arrangement.End
             ) {
                 IconButton(
-                    modifier = Modifier.size(24.dp),
+                    modifier = Modifier.size(defaultPadding),
                     onClick = {
                         if (!isSelected) {
                             favoritesViewModel.addFavoriteChannel(FavoriteChannel().apply {
@@ -92,7 +95,7 @@ fun ChannelItem(
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Star,
-                        tint = if (isSelected) Color(0xFF0077FF) else Color(0xFFD1D5DF),
+                        tint = if (isSelected) favoriteColor else commonColor,
                         contentDescription = "contentDescription",
                     )
                 }

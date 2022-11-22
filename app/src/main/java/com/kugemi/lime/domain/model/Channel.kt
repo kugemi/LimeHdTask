@@ -11,7 +11,7 @@ data class Channel(
     val cdn: String,
 
     @SerializedName("current")
-    val current: Current,
+    val current: Current?,
 
     @SerializedName("drm_status")
     val drm_status: Int,

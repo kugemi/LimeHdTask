@@ -7,7 +7,7 @@ data class Channels(
     @SerializedName("channels")
     val channels: List<Channel>,
 
-    @SerializedName("ckey")
+    @SerializedName("cacheKey")
     val ckey: String,
 
     @SerializedName("valid")
